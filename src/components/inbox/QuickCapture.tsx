@@ -6,13 +6,14 @@ import { useState } from "react";
 import { clsx } from "clsx";
 import { useFocusStore } from "@/store/useFocusStore";
 import { useRouter } from "next/navigation";
+import Link from "next/link"; // Added import
 
 export function QuickCapture() {
     const [input, setInput] = useState("");
     const [type, setType] = useState<"text" | "url">("text");
     const [isProcessing, setIsProcessing] = useState(false);
 
-    const addCapsule = useFocusStore((state) => state.addCapsule);
+    const { addCapsule, googleAiKey } = useFocusStore();
     const router = useRouter();
 
     const handleProcess = async () => {
@@ -23,10 +24,14 @@ export function QuickCapture() {
         try {
             const response = await fetch("/api/capsule/generate", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-api-key": googleAiKey // Pass user key if it exists
+                },
                 body: JSON.stringify({
                     content: input,
-                    tone: "Concise"
+                    tone: "Executive",
+                    customInstructions: ""
                 }),
             });
 
@@ -100,6 +105,21 @@ export function QuickCapture() {
                     autoFocus={!isProcessing}
                     disabled={isProcessing}
                 />
+                <textarea
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder={type === "url" ? "Pega un enlace aquí..." : "¿En qué estás pensando?"}
+                    className="w-full h-40 bg-transparent text-xl font-medium placeholder:text-muted-foreground/40 resize-none focus:outline-none"
+                    autoFocus={!isProcessing}
+                    disabled={isProcessing}
+                />
+
+                {!googleAiKey && !isProcessing && (
+                    <div className="mb-4 p-3 rounded-xl bg-primary/5 border border-primary/10 text-xs text-muted-foreground flex gap-2 items-center">
+                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                        Modo Offline / Inteligencia Simulada. <Link href="/settings" className="underline font-bold text-primary">Añade tu API Key</Link> para activar Gemini AI.
+                    </div>
+                )}
             </div>
 
             <motion.div

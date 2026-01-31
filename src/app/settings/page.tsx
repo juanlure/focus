@@ -6,12 +6,17 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
+import { useFocusStore } from "@/store/useFocusStore";
+
 export default function SettingsPage() {
-    const [tone, setTone] = useState("Concise");
+    const { googleAiKey, setGoogleAiKey } = useFocusStore();
+    const [tone, setTone] = useState("Conciso");
     const [instructions, setInstructions] = useState("");
+    const [userKey, setUserKey] = useState(googleAiKey);
     const [isSaved, setIsSaved] = useState(false);
 
     const handleSave = () => {
+        setGoogleAiKey(userKey);
         setIsSaved(true);
         setTimeout(() => setIsSaved(false), 2000);
     };
@@ -53,6 +58,23 @@ export default function SettingsPage() {
                             </div>
                         </div>
 
+                        {/* API Key del Usuario */}
+                        <div className="space-y-3">
+                            <label className="text-sm font-medium text-muted-foreground">Tu Google AI API Key:</label>
+                            <div className="relative">
+                                <input
+                                    type="password"
+                                    className="w-full bg-background/50 border border-border rounded-xl p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-muted-foreground/30"
+                                    placeholder="sk-..."
+                                    value={userKey}
+                                    onChange={(e) => setUserKey(e.target.value)}
+                                />
+                                <div className="mt-1 text-[10px] text-muted-foreground">
+                                    Consíguela gratis en <a href="https://aistudio.google.com/" target="_blank" className="underline text-primary">Google AI Studio</a>
+                                </div>
+                            </div>
+                        </div>
+
                         {/* Instrucciones Personalizadas */}
                         <div className="space-y-3">
                             <label className="text-sm font-medium text-muted-foreground">Instrucciones Personalizadas:</label>
@@ -66,9 +88,9 @@ export default function SettingsPage() {
 
                         <button
                             onClick={handleSave}
-                            className="w-full py-3 bg-white/5 border border-white/10 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-white/10 transition-colors"
+                            className="w-full py-4 bg-primary text-primary-foreground rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-[0.98]"
                         >
-                            {isSaved ? <span className="text-green-500">¡Cambios Guardados!</span> : <><Save className="w-4 h-4" /> Guardar Configuración</>}
+                            {isSaved ? <span className="text-primary-foreground/80">¡Configuración Guardada!</span> : <><Save className="w-4 h-4" /> Guardar Todo</>}
                         </button>
 
                     </div>
@@ -83,30 +105,15 @@ export default function SettingsPage() {
                     <div className="bg-card border border-border/50 rounded-2xl p-5 space-y-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <div className="text-sm font-bold">API Access</div>
-                                <div className="text-xs text-muted-foreground">Read/Write access to your Second Brain.</div>
+                                <div className="text-sm font-bold">Acceso API</div>
+                                <div className="text-xs text-muted-foreground">Acceso de lectura/escritura a tu Segundo Cerebro.</div>
                             </div>
-                            <button onClick={() => alert("API Key Generated: sk_live_51M...")} className="text-xs font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-colors">
-                                Generate Key
+                            <button onClick={() => alert("sk_live_51M...")} className="text-xs font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-colors">
+                                Generar Key
                             </button>
                         </div>
-                        <div className="p-3 bg-black/40 rounded-lg font-mono text-xs text-muted-foreground break-all">
-                            sk_live_••••••••••••••••••••••
-                        </div>
                     </div>
                 </section>
-
-                {/* Account Info */}
-                <section className="space-y-4 opacity-50 pointer-events-none">
-                    <div className="flex items-center gap-2 mb-2">
-                        <Sliders className="w-5 h-5 text-muted-foreground" />
-                        <h2 className="text-lg font-bold">Account</h2>
-                    </div>
-                    <div className="bg-card border border-border/50 rounded-2xl p-5">
-                        <p className="text-sm">Manage subscription and profile...</p>
-                    </div>
-                </section>
-
             </div>
         </main>
     );

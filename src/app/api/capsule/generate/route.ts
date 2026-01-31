@@ -1,16 +1,23 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || "");
-
 export async function POST(req: Request) {
   try {
-    const { content, tone = "Concise", customInstructions = "" } = await req.json();
+    const { content, tone = "Conciso", customInstructions = "" } = await req.json();
+
+    // Prioritize User Key from header, then Env Key
+    const userProvidedKey = req.headers.get("x-api-key");
+    const apiKey = userProvidedKey || process.env.GOOGLE_AI_API_KEY;
+
+    if (!apiKey) {
+      return NextResponse.json({ error: "No API Key provided" }, { status: 401 });
+    }
 
     if (!content) {
       return NextResponse.json({ error: "Content is required" }, { status: 400 });
     }
 
+    const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const systemPrompt = `

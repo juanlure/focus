@@ -5,11 +5,13 @@ import { Capsule } from '@/lib/types';
 interface FocusStore {
     capsules: Capsule[];
     archivedCapsules: Capsule[];
+    googleAiKey: string;
     addCapsule: (capsule: Omit<Capsule, 'id' | 'createdAt'>) => void;
     removeCapsule: (id: string) => void;
     archiveCapsule: (id: string) => void;
     getCapsule: (id: string) => Capsule | undefined;
     updateAction: (capsuleId: string, actionId: string, isCompleted: boolean) => void;
+    setGoogleAiKey: (key: string) => void;
 }
 
 export const useFocusStore = create<FocusStore>()(
@@ -17,6 +19,7 @@ export const useFocusStore = create<FocusStore>()(
         (set, get) => ({
             capsules: [],
             archivedCapsules: [],
+            googleAiKey: '',
             addCapsule: (newCapsule) => {
                 const id = crypto.randomUUID();
                 const createdAt = new Date().toISOString();
@@ -52,6 +55,7 @@ export const useFocusStore = create<FocusStore>()(
                     ),
                 }));
             },
+            setGoogleAiKey: (key) => set({ googleAiKey: key }),
         }),
         {
             name: 'focus-storage',
