@@ -1,12 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowUp, Link, FileText, Mic, Loader2 } from "lucide-react";
+import { ArrowUp, Link2, Zap, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { clsx } from "clsx";
 import { useFocusStore } from "@/store/useFocusStore";
 import { useRouter } from "next/navigation";
-import { Capsule } from "@/lib/types";
 
 export function QuickCapture() {
     const [input, setInput] = useState("");
@@ -21,34 +20,48 @@ export function QuickCapture() {
 
         setIsProcessing(true);
 
-        // Simulate AI Latency
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        try {
+            const response = await fetch("/api/capsule/generate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    content: input,
+                    tone: "Concise"
+                }),
+            });
 
-        const newId = crypto.randomUUID();
-        const mockCapsule: Capsule = {
-            id: newId,
-            originalContent: input,
-            type: type === "url" ? "url" : "text",
-            summary: "Estrategia de reducción de carga cognitiva mediante aplicaciones PWA.", // Mock for demo
-            actions: [
-                { id: "1", text: "Investigar frameworks de PWA modernos.", isCompleted: false },
-                { id: "2", text: "Definir paleta de colores oscuros premium.", isCompleted: false },
-                { id: "3", text: "Prototipar navegación por gestos.", isCompleted: true },
-            ],
-            sentiment: "insightful",
-            createdAt: new Date().toISOString(),
-            timeToRead: "45s"
-        };
+            if (!response.ok) throw new Error("Failed to generate capsule");
 
-        // If input is short, just generic echo for demo variety
-        if (input.length < 20) {
-            mockCapsule.summary = "Nota rápida capturada.";
-            mockCapsule.actions = [{ id: "1", text: "Revisar nota posteriormente.", isCompleted: false }];
-            mockCapsule.sentiment = "casual";
+            const aiResult = await response.json();
+
+            const newId = crypto.randomUUID();
+            addCapsule({
+                originalContent: input,
+                type: type === "url" ? "url" : "text",
+                summary: aiResult.summary,
+                actions: aiResult.actions,
+                sentiment: aiResult.sentiment,
+                timeToRead: aiResult.timeToRead,
+            });
+
+            setInput("");
+            router.push(`/capsule/${newId}`);
+        } catch (error) {
+            console.error("AI Capture Error:", error);
+            // Fallback for demo or if no API key
+            const mockId = crypto.randomUUID();
+            addCapsule({
+                originalContent: input,
+                type: type === "url" ? "url" : "text",
+                summary: "Nota capturada (Modo Offline o sin API Key)",
+                actions: [{ id: "1", text: "Revisar y procesar manualmente", isCompleted: false }],
+                sentiment: "casual",
+                timeToRead: "15s"
+            });
+            router.push(`/capsule/${mockId}`);
+        } finally {
+            setIsProcessing(false);
         }
-
-        addCapsule(mockCapsule);
-        router.push(`/capsule/${newId}`);
     };
 
     return (
@@ -81,7 +94,7 @@ export function QuickCapture() {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.1 }}
                     className="flex-1 w-full bg-transparent text-lg placeholder:text-muted-foreground/50 resize-none focus:outline-none"
-                    placeholder={type === "url" ? "Pega un enlace aquí..." : "¿Qué tienes en mente o qué acabas de recibir?"}
+                    placeholder={type === "url" ? "Pega un enlace aquí..." : "¿Qué tienes en mente?"}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     autoFocus={!isProcessing}
@@ -97,15 +110,14 @@ export function QuickCapture() {
             >
                 <div className="flex items-center justify-between">
                     <div className="flex gap-4 text-muted-foreground">
-                        <button className="p-2 hover:bg-muted rounded-full transition-colors"><Link className="w-5 h-5" /></button>
-                        <button className="p-2 hover:bg-muted rounded-full transition-colors"><FileText className="w-5 h-5" /></button>
-                        <button className="p-2 hover:bg-muted rounded-full transition-colors"><Mic className="w-5 h-5" /></button>
+                        <button className="p-2 hover:bg-muted rounded-full transition-colors"><Link2 className="w-5 h-5" /></button>
+                        <button className="p-2 hover:bg-muted rounded-full transition-colors"><Zap className="w-5 h-5" /></button>
                     </div>
 
                     <button
                         onClick={handleProcess}
                         disabled={!input.trim() || isProcessing}
-                        className="bg-accent text-accent-foreground px-6 py-2.5 rounded-full font-bold text-sm shadow-lg shadow-accent/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        className="bg-primary text-primary-foreground px-6 py-2.5 rounded-full font-bold text-sm shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                     >
                         {isProcessing ? (
                             <>
