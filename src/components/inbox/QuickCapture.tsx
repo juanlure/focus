@@ -99,7 +99,7 @@ export function QuickCapture() {
 
                     <div className={clsx("flex items-center gap-1.5 px-2 py-1 rounded-full border text-[9px] font-black uppercase tracking-widest transition-all", googleAiKey ? "bg-green-500/10 text-green-500 border-green-500/20" : "bg-orange-500/10 text-orange-500 border-orange-500/20")}>
                         <div className={clsx("w-1.5 h-1.5 rounded-full", googleAiKey ? "bg-green-500 animate-pulse" : "bg-orange-500")} />
-                        {googleAiKey ? "IA Gemini Activa" : "Modo Offline"}
+                        {googleAiKey ? "IA Gemini 2.5 Flash Activa" : "Modo Offline"}
                     </div>
                 </div>
 
