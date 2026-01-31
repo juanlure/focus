@@ -1,4 +1,4 @@
-export type Sentiment = "urgent" | "insightful" | "casual" | "action-required";
+export type Sentiment = "urgent" | "insightful" | "casual" | "action-required" | "reflective" | "neutral";
 
 export interface ActionItem {
     id: string;

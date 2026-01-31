@@ -41,6 +41,8 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+import { Toaster } from 'sonner';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -49,13 +51,23 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground selection:bg-primary/20`}
       >
-        <ServiceWorkerRegister />
-        <CommandPalette />
-        <div className="mx-auto max-w-md min-h-screen relative flex flex-col shadow-2xl overflow-hidden bg-background">
-          {children}
+        <div className="max-w-md mx-auto min-h-screen bg-background shadow-2xl shadow-black/50 relative overflow-x-hidden border-x border-border/10">
+          {/* <Header /> */} {/* Header was not in the original code, commenting out */}
+          <main className="pb-24">
+            {children}
+          </main>
           <BottomNav />
+          <CommandPalette />
+          <ServiceWorkerRegister />
+          <Toaster
+            theme="dark"
+            position="top-center"
+            toastOptions={{
+              style: { background: '#121212', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }
+            }}
+          />
         </div>
       </body>
     </html>

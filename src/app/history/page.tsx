@@ -5,19 +5,64 @@ import { CapsuleCard } from "@/components/capsule/CapsuleCard";
 import { Header } from "@/components/ui/Header";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Plus } from "lucide-react";
-import { useState } from "react";
+import { Plus, Search, Filter } from "lucide-react";
+import { useState, useMemo } from "react";
 
 export default function HistoryPage() {
     const capsules = useFocusStore((state) => state.capsules);
+    const [search, setSearch] = useState("");
+    const [filter, setFilter] = useState<string>("all");
+
+    const filteredCapsules = useMemo(() => {
+        return capsules.filter(cap => {
+            const matchesSearch = cap.summary.toLowerCase().includes(search.toLowerCase()) ||
+                cap.originalContent.toLowerCase().includes(search.toLowerCase());
+            const matchesFilter = filter === "all" || cap.sentiment === filter;
+            return matchesSearch && matchesFilter;
+        });
+    }, [capsules, search, filter]);
 
     return (
         <main className="flex-1 flex flex-col bg-background pb-24">
             <Header />
             <div className="p-4 space-y-4">
-                <h2 className="text-xl font-bold px-1 mb-4">Historial</h2>
+                <div className="flex items-center justify-between px-1">
+                    <h2 className="text-xl font-bold">Historial</h2>
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest bg-muted/50 px-2 py-0.5 rounded-full">{capsules.length} Cápsulas</span>
+                </div>
 
-                {capsules.length === 0 ? (
+                {/* Search & Filter UI */}
+                <div className="space-y-3">
+                    <div className="relative group">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                        <input
+                            type="text"
+                            placeholder="Buscar en tu cerebro..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="w-full bg-muted/40 border border-border/50 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all placeholder:text-muted-foreground/40"
+                        />
+                    </div>
+
+                    <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+                        {[
+                            { value: "all", label: "Todos" },
+                            { value: "urgent", label: "Urgente" },
+                            { value: "insightful", label: "Ideas" },
+                            { value: "action-required", label: "Tareas" }
+                        ].map((btn) => (
+                            <button
+                                key={btn.value}
+                                onClick={() => setFilter(btn.value)}
+                                className={`whitespace-nowrap px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${filter === btn.value ? "bg-primary text-primary-foreground border-primary" : "bg-muted/30 text-muted-foreground border-border/50 hover:bg-muted/50"}`}
+                            >
+                                {btn.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {filteredCapsules.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
                         <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center opacity-50">
                             <Plus className="w-8 h-8 text-muted-foreground" />
@@ -34,13 +79,18 @@ export default function HistoryPage() {
                     </div>
                 ) : (
                     <div className="space-y-4 overflow-hidden">
-                        {capsules.map((capsule) => (
+                        {filteredCapsules.map((capsule) => (
                             <SwipeToDelete key={capsule.id} id={capsule.id}>
                                 <Link href={`/capsule/${capsule.id}`}>
                                     <CapsuleCard capsule={capsule} />
                                 </Link>
                             </SwipeToDelete>
                         ))}
+                        {filteredCapsules.length === 0 && search && (
+                            <div className="text-center py-10 text-muted-foreground text-sm">
+                                No se encontraron resultados para "{search}"
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

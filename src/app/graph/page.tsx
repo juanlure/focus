@@ -2,27 +2,40 @@
 
 import { Header } from "@/components/ui/Header";
 import { motion } from "framer-motion";
-import { ArrowLeft, Share2, ZoomIn, ZoomOut } from "lucide-react";
+import { ArrowLeft, ZoomIn, ZoomOut, Brain } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useFocusStore } from "@/store/useFocusStore";
 
 export default function KnowledgeGraphPage() {
     const [scale, setScale] = useState(1);
+    const { capsules } = useFocusStore();
 
-    // Mock Graph Data
-    const nodes = [
-        { id: 1, x: 50, y: 50, label: "SaaS Growth", size: 60, color: "#8b5cf6" },
-        { id: 2, x: 20, y: 30, label: "Marketing", size: 40, color: "#ec4899" },
-        { id: 3, x: 80, y: 30, label: "Product", size: 45, color: "#3b82f6" },
-        { id: 4, x: 50, y: 80, label: "Retention", size: 35, color: "#10b981" },
-        { id: 5, x: 20, y: 70, label: "Pricing", size: 30, color: "#f59e0b" },
-        { id: 6, x: 80, y: 70, label: "Onboarding", size: 30, color: "#f59e0b" },
-    ];
+    // Dynamically generate nodes from real capsules
+    const { nodes, links } = useMemo(() => {
+        if (capsules.length === 0) {
+            return {
+                nodes: [{ id: "empty", x: 50, y: 50, label: "Vacío", size: 60, color: "#333" }],
+                links: []
+            };
+        }
 
-    const links = [
-        { from: 1, to: 2 }, { from: 1, to: 3 }, { from: 1, to: 4 },
-        { from: 2, to: 5 }, { from: 3, to: 6 }, { from: 4, to: 6 }
-    ];
+        const newNodes = capsules.map((cap, i) => ({
+            id: cap.id,
+            label: cap.summary.slice(0, 15) + "...",
+            x: 20 + Math.random() * 60,
+            y: 20 + Math.random() * 60,
+            size: 40 + (cap.actions.length * 5),
+            color: cap.sentiment === "urgent" ? "#ef4444" : cap.sentiment === "insightful" ? "#8b5cf6" : "#3b82f6"
+        }));
+
+        const newLinks = [];
+        for (let i = 0; i < newNodes.length - 1; i++) {
+            newLinks.push({ from: newNodes[i].id, to: newNodes[i + 1].id });
+        }
+
+        return { nodes: newNodes, links: newLinks };
+    }, [capsules]);
 
     return (
         <main className="h-screen bg-[#050505] overflow-hidden flex flex-col items-center justify-center relative">
@@ -44,6 +57,13 @@ export default function KnowledgeGraphPage() {
                 drag
                 dragConstraints={{ left: -200, right: 200, top: -200, bottom: 200 }}
             >
+                {capsules.length === 0 && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center opacity-20">
+                        <Brain className="w-16 h-16 mb-4" />
+                        <span className="text-xs uppercase tracking-widest">Sin datos neuronales</span>
+                    </div>
+                )}
+
                 <svg className="w-full h-full pointer-events-none">
                     {links.map((link, i) => {
                         const start = nodes.find(n => n.id === link.from)!;
@@ -63,7 +83,7 @@ export default function KnowledgeGraphPage() {
                     })}
                 </svg>
 
-                {nodes.map((node) => (
+                {nodes.map((node, i) => (
                     <motion.div
                         key={node.id}
                         className="absolute rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.1)] cursor-pointer hover:z-50"
@@ -79,7 +99,7 @@ export default function KnowledgeGraphPage() {
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 0.8 }}
                         whileHover={{ scale: 1.2, opacity: 1 }}
-                        transition={{ duration: 0.5, delay: node.id * 0.1 }}
+                        transition={{ duration: 0.5, delay: i * 0.1 }}
                     >
                         <span className="text-[8px] font-bold text-white pointer-events-none drop-shadow-md">{node.label}</span>
                     </motion.div>
@@ -87,8 +107,10 @@ export default function KnowledgeGraphPage() {
             </motion.div>
 
             <div className="absolute bottom-10 text-center pointer-events-none">
-                <h2 className="text-white/50 text-xs tracking-[0.3em] font-light uppercase">Neural Connectivity</h2>
-                <div className="text-white/20 text-[10px] mt-1">12 Active Nodes • 45 Connections</div>
+                <h2 className="text-white/50 text-xs tracking-[0.3em] font-light uppercase">Conectividad Neuronal</h2>
+                <div className="text-white/20 text-[10px] mt-1">
+                    {nodes.length} Nodos Activos • {links.length} Conexiones
+                </div>
             </div>
         </main>
     );

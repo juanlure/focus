@@ -10,51 +10,66 @@ import { useFocusStore } from "@/store/useFocusStore";
 export default function VoiceCapturePage() {
     const [isListening, setIsListening] = useState(false);
     const [transcript, setTranscript] = useState("");
+    const [recognition, setRecognition] = useState<any>(null);
     const router = useRouter();
     const { addCapsule } = useFocusStore();
 
     useEffect(() => {
-        // Simulate initial start delay
-        const timer = setTimeout(() => setIsListening(true), 800);
-        return () => clearTimeout(timer);
+        // Initialize Web Speech API
+        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            const rec = new SpeechRecognition();
+            rec.continuous = true;
+            rec.interimResults = true;
+            rec.lang = 'es-ES';
+
+            rec.onresult = (event: any) => {
+                let currentTranscript = "";
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    currentTranscript += event.results[i][0].transcript;
+                }
+                setTranscript(currentTranscript);
+            };
+
+            rec.onstart = () => setIsListening(true);
+            rec.onend = () => setIsListening(false);
+            rec.onerror = (event: any) => {
+                console.error("Speech Recognition Error:", event.error);
+                setIsListening(false);
+            };
+
+            setRecognition(rec);
+
+            // Auto-start after delay
+            const timer = setTimeout(() => rec.start(), 1000);
+            return () => {
+                clearTimeout(timer);
+                rec.stop();
+            };
+        }
     }, []);
 
-    useEffect(() => {
-        if (isListening) {
-            // Simulate progressive transcription
-            const phrases = [
-                "FocusBrief...",
-                " record this...",
-                " I need to scale the platform...",
-                " to 1 million users...",
-                " by Q3."
-            ];
-            let delay = 0;
-            phrases.forEach((phrase, index) => {
-                setTimeout(() => {
-                    setTranscript(prev => prev + phrase);
-                }, delay + 1000);
-                delay += 1500;
-            });
-        }
-    }, [isListening]);
-
     const handleStop = () => {
+        if (recognition) recognition.stop();
         setIsListening(false);
-        // Process content (simulated)
+
+        if (!transcript.trim()) {
+            router.push("/dashboard");
+            return;
+        }
+
+        // Add to store (will be refined by the user or processed later)
         addCapsule({
             type: "text",
-            summary: "Scaling Strategy to 1M Users",
-            originalContent: transcript || "Voice Note: Scaling strategy discussions...",
+            summary: "Nota de Voz (Pendiente)",
+            originalContent: transcript,
             actions: [
-                { id: "v1", text: "Draft growth roadmap Q3", isCompleted: false },
-                { id: "v2", text: "Hire VP of Engineering", isCompleted: false },
-                { id: "v3", text: "Review infrastructure costs", isCompleted: false }
+                { id: crypto.randomUUID(), text: "Procesar esta nota de voz con IA", isCompleted: false }
             ],
-            sentiment: "insightful",
-            timeToRead: "45s"
+            sentiment: "reflective",
+            timeToRead: "30s"
         });
-        // Navigate to recent capsule view (simulated by going to history for now)
+
         router.push("/history");
     };
 

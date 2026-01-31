@@ -8,17 +8,20 @@ import { ArrowLeft } from "lucide-react";
 
 import { useFocusStore } from "@/store/useFocusStore";
 
+import { toast } from "sonner";
+
 export default function SettingsPage() {
     const { googleAiKey, setGoogleAiKey } = useFocusStore();
     const [tone, setTone] = useState("Conciso");
     const [instructions, setInstructions] = useState("");
     const [userKey, setUserKey] = useState(googleAiKey);
-    const [isSaved, setIsSaved] = useState(false);
 
     const handleSave = () => {
         setGoogleAiKey(userKey);
-        setIsSaved(true);
-        setTimeout(() => setIsSaved(false), 2000);
+        toast.success("Configuración guardada correctamente", {
+            description: "Tu Cerebro Digital ha sido actualizado.",
+            icon: <Cpu className="w-4 h-4 text-primary" />
+        });
     };
 
     return (
@@ -90,7 +93,7 @@ export default function SettingsPage() {
                             onClick={handleSave}
                             className="w-full py-4 bg-primary text-primary-foreground rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-[0.98]"
                         >
-                            {isSaved ? <span className="text-primary-foreground/80">¡Configuración Guardada!</span> : <><Save className="w-4 h-4" /> Guardar Todo</>}
+                            <Save className="w-4 h-4" /> Guardar Todo
                         </button>
 
                     </div>
