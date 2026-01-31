@@ -11,6 +11,7 @@ const navItems = [
     { href: "/review", label: "Review", icon: CheckCheck },
     { href: "/capture", label: "Capturar", icon: Plus, isFab: true },
     { href: "/history", label: "Historial", icon: Layers },
+    { href: "/settings", label: "Configurar", icon: Settings },
 ];
 
 export function BottomNav() {
