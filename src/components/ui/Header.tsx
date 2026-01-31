@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Zap } from "lucide-react";
+import { Zap, Settings as SettingsIcon } from "lucide-react";
 import { AudioBriefing } from "./AudioBriefing";
 import { StreakCounter } from "./StreakCounter";
+import Link from "next/link";
 
 export function Header() {
     return (
@@ -22,10 +23,10 @@ export function Header() {
             <div className="flex items-center gap-3">
                 <StreakCounter />
                 <AudioBriefing />
-                {/* Placeholder for future actions like user profile or connectivity status */}
-                <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-xs font-medium text-muted-foreground">
-                    J
-                </div>
+
+                <Link href="/settings" className="p-2 -mr-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
+                    <SettingsIcon className="w-5 h-5" />
+                </Link>
             </div>
         </motion.header>
     );
