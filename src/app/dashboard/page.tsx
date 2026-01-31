@@ -2,7 +2,6 @@
 
 import { Header } from "@/components/ui/Header";
 import { BrainStats } from "@/components/dashboard/BrainStats";
-import { TeamInvite } from "@/components/dashboard/TeamInvite";
 import { IOSInstallGuide } from "@/components/ui/IOSInstallGuide";
 import Link from "next/link";
 import { ArrowRight, Plus } from "lucide-react";
@@ -28,8 +27,6 @@ export default function Home() {
 
           <BrainStats />
         </section>
-
-        <TeamInvite />
 
         {/* Action Button */}
         <div className="flex justify-center pt-4">

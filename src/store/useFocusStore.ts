@@ -25,7 +25,7 @@ export const useFocusStore = create<FocusStore>()(
             archivedCapsules: [],
             googleAiKey: '',
             isOnboarded: false,
-            userName: 'Juanlu',
+            userName: '',
             addCapsule: (newCapsule) => {
                 const id = newCapsule.id || crypto.randomUUID();
                 const createdAt = new Date().toISOString();
