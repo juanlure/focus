@@ -74,27 +74,34 @@ export function QuickCapture() {
     return (
         <div className="flex-1 flex flex-col h-full bg-background relative z-10">
             <div className="flex-1 flex flex-col p-6 gap-6">
-                <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-2 mb-2"
-                >
-                    <span className="text-muted-foreground text-sm font-medium">Modo de captura:</span>
-                    <div className="flex max-w-fit bg-muted p-1 rounded-full border border-border">
-                        <button
-                            onClick={() => setType("text")}
-                            className={clsx("px-3 py-1 rounded-full text-xs font-bold transition-colors", type === "text" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground")}
-                        >
-                            Texto
-                        </button>
-                        <button
-                            onClick={() => setType("url")}
-                            className={clsx("px-3 py-1 rounded-full text-xs font-bold transition-colors", type === "url" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground")}
-                        >
-                            Enlace
-                        </button>
+                <div className="flex items-center justify-between mb-2">
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex items-center gap-2"
+                    >
+                        <span className="text-muted-foreground text-[10px] font-bold uppercase tracking-wider">Captura:</span>
+                        <div className="flex max-w-fit bg-muted/50 p-0.5 rounded-full border border-border/50">
+                            <button
+                                onClick={() => setType("text")}
+                                className={clsx("px-3 py-1 rounded-full text-[10px] font-bold transition-all", type === "text" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground")}
+                            >
+                                Texto
+                            </button>
+                            <button
+                                onClick={() => setType("url")}
+                                className={clsx("px-3 py-1 rounded-full text-[10px] font-bold transition-all", type === "url" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground")}
+                            >
+                                Enlace
+                            </button>
+                        </div>
+                    </motion.div>
+
+                    <div className={clsx("flex items-center gap-1.5 px-2 py-1 rounded-full border text-[9px] font-black uppercase tracking-widest transition-all", googleAiKey ? "bg-green-500/10 text-green-500 border-green-500/20" : "bg-orange-500/10 text-orange-500 border-orange-500/20")}>
+                        <div className={clsx("w-1.5 h-1.5 rounded-full", googleAiKey ? "bg-green-500 animate-pulse" : "bg-orange-500")} />
+                        {googleAiKey ? "IA Gemini Activa" : "Modo Offline"}
                     </div>
-                </motion.div>
+                </div>
 
                 <motion.textarea
                     initial={{ opacity: 0 }}
@@ -116,12 +123,6 @@ export function QuickCapture() {
                     disabled={isProcessing}
                 />
 
-                {!googleAiKey && !isProcessing && (
-                    <div className="mb-4 p-3 rounded-xl bg-primary/5 border border-primary/10 text-xs text-muted-foreground flex gap-2 items-center">
-                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                        Modo Offline / Inteligencia Simulada. <Link href="/settings" className="underline font-bold text-primary">Añade tu API Key</Link> para activar Gemini AI.
-                    </div>
-                )}
             </div>
 
             <motion.div

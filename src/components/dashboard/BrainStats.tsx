@@ -1,3 +1,5 @@
+"use client";
+
 import { Activity, BarChart3, Clock, Zap } from "lucide-react";
 import { useFocusStore } from "@/store/useFocusStore";
 import { useEffect, useState } from "react";
