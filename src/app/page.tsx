@@ -70,18 +70,6 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* Social Proof */}
-      <section className="py-10 border-y border-white/5 bg-white/[0.02]">
-        <div className="max-w-md mx-auto text-center px-6">
-          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-6">Usado por líderes en</p>
-          <div className="flex justify-between items-center opacity-40 grayscale">
-            <Globe className="w-8 h-8" />
-            <Zap className="w-8 h-8" />
-            <Shield className="w-8 h-8" />
-            <div className="font-serif font-bold text-xl">ACME</div>
-          </div>
-        </div>
-      </section>
 
       {/* Feature Grid */}
       <section className="px-6 py-20 max-w-md mx-auto space-y-12">
