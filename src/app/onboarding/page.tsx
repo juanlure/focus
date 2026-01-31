@@ -36,10 +36,10 @@ export default function OnboardingPage() {
             >
                 {step === 1 && (
                     <div className="space-y-6">
-                        <h1 className="text-4xl font-bold">First, what's your name?</h1>
+                        <h1 className="text-4xl font-bold">Primero, ¿cómo te llamas?</h1>
                         <input
                             type="text"
-                            placeholder="Type your name..."
+                            placeholder="Escribe tu nombre..."
                             className="w-full bg-transparent border-b-2 border-white/20 text-2xl py-2 focus:outline-none focus:border-white transition-colors placeholder:text-muted-foreground/50"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
@@ -50,9 +50,9 @@ export default function OnboardingPage() {
 
                 {step === 2 && (
                     <div className="space-y-6">
-                        <h1 className="text-4xl font-bold">What represents you best?</h1>
+                        <h1 className="text-4xl font-bold">¿Qué te define mejor?</h1>
                         <div className="grid gap-3">
-                            {["Founder / CEO", "Software Engineer", "Content Creator", "Student"].map((r) => (
+                            {["Fundador / CEO", "Ingeniero de Software", "Creador de Contenido", "Estudiante"].map((r) => (
                                 <button
                                     key={r}
                                     onClick={() => setRole(r)}
@@ -70,8 +70,8 @@ export default function OnboardingPage() {
                         <div className="w-20 h-20 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
                             <Check className="w-10 h-10" />
                         </div>
-                        <h1 className="text-3xl font-bold">Setup Complete</h1>
-                        <p className="text-muted-foreground">We've customized your neural engine for <strong>{role}</strong> workflows.</p>
+                        <h1 className="text-3xl font-bold">Configuración Completada</h1>
+                        <p className="text-muted-foreground">Hemos optimizado tu motor neural para flujos de <strong>{role}</strong>.</p>
                     </div>
                 )}
             </motion.div>
@@ -80,7 +80,7 @@ export default function OnboardingPage() {
                 onClick={nextStep}
                 className="w-full py-4 bg-primary text-primary-foreground rounded-2xl font-bold text-lg mt-8 flex items-center justify-center gap-2"
             >
-                {step === 3 ? "Launch Dashboard" : "Continue"} <ArrowRight className="w-5 h-5" />
+                {step === 3 ? "Lanzar Dashboard" : "Continuar"} <ArrowRight className="w-5 h-5" />
             </button>
         </main>
     );

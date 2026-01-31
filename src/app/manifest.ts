@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'Tu curador cognitivo personal.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#0f0f0f',
-    theme_color: '#0f0f0f',
+    background_color: '#000000',
+    theme_color: '#000000',
     icons: [
       {
         src: '/icon-192x192.png',

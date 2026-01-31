@@ -17,16 +17,23 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "FocusBrief",
-  description: "Less noise, more signal.",
+  description: "Menos ruido, más señal.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "FocusBrief",
+    startupImage: [
+      {
+        url: "/splash.png",
+        media: "(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)"
+      }
+    ]
   },
 };
 
 export const viewport: Viewport = {
+  themeColor: "#0f0f0f",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,

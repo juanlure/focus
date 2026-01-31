@@ -38,15 +38,15 @@ export function CommandPalette() {
                     <div className="flex items-center border-b border-border px-3">
                         <Search className="w-5 h-5 text-muted-foreground mr-2 shrink-0" />
                         <Command.Input
-                            placeholder="Type a command or search..."
+                            placeholder="Escribe un comando o busca..."
                             className="w-full h-14 bg-transparent outline-none text-foreground placeholder:text-muted-foreground font-medium"
                         />
                     </div>
 
                     <Command.List className="max-h-[300px] overflow-y-auto p-2">
-                        <Command.Empty className="p-4 text-center text-sm text-muted-foreground">No results found.</Command.Empty>
+                        <Command.Empty className="p-4 text-center text-sm text-muted-foreground">No se encontraron resultados.</Command.Empty>
 
-                        <Command.Group heading="Actions" className="text-xs font-medium text-muted-foreground px-2 py-1.5 mb-2">
+                        <Command.Group heading="Acciones" className="text-xs font-medium text-muted-foreground px-2 py-1.5 mb-2">
                             <Item onSelect={() => runCommand(() => router.push("/capture"))}>
                                 <Plus className="w-4 h-4 mr-2" />
                                 New Capsule
@@ -76,11 +76,11 @@ export function CommandPalette() {
                             </Item>
                             <Item onSelect={() => runCommand(() => router.push("/history"))}>
                                 <Laptop className="w-4 h-4 mr-2" />
-                                History
+                                Historial
                             </Item>
                             <Item onSelect={() => runCommand(() => router.push("/settings"))}>
                                 <Settings className="w-4 h-4 mr-2" />
-                                Settings
+                                Configuración
                             </Item>
                         </Command.Group>
 
@@ -88,8 +88,8 @@ export function CommandPalette() {
                 </Command>
 
                 <div className="p-2 border-t border-border bg-muted/30 text-[10px] text-muted-foreground flex justify-between px-4">
-                    <span>Pro Tip: Use arrow keys to navigate</span>
-                    <span>ESC to close</span>
+                    <span>Consejo: Usa las flechas para navegar</span>
+                    <span>ESC para cerrar</span>
                 </div>
             </div>
 

@@ -4,48 +4,54 @@ import { NextResponse } from "next/server";
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || "");
 
 export async function POST(req: Request) {
-    try {
-        const { content, tone = "Concise", customInstructions = "" } = await req.json();
+  try {
+    const { content, tone = "Concise", customInstructions = "" } = await req.json();
 
-        if (!content) {
-            return NextResponse.json({ error: "Content is required" }, { status: 400 });
-        }
+    if (!content) {
+      return NextResponse.json({ error: "Content is required" }, { status: 400 });
+    }
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        const systemPrompt = `
-      You are FocusBrief AI, an elite cognitive assistant. 
-      Your goal is to transform messy input into a clean "Action Capsule".
+    const systemPrompt = `
+      Eres FocusBrief AI, un asistente cognitivo de élite. 
+      Tu objetivo es transformar entradas desordenadas en una "Cápsula de Acción" impecable.
       
-      TONE: ${tone}
-      CUSTOM INSTRUCTIONS: ${customInstructions}
+      TONO: ${tone}
+      INSTRUCCIONES PERSONALIZADAS: ${customInstructions}
       
-      OUTPUT FORMAT (JSON ONLY):
+      REGLAS CRÍTICAS:
+      1. ESCRIBE TODO EL CONTENIDO EN ESPAÑOL.
+      2. El resumen debe ser impactante y breve (máximo 2 frases).
+      3. Las acciones deben ser tareas concretas y ejecutables.
+      4. El sentimiento debe ser una de estas palabras: "insightful", "urgent", "reflective", o "neutral".
+      
+      FORMATO DE SALIDA (SOLO JSON):
       {
-        "summary": "One or two impactful sentences maximum.",
+        "summary": "Resumen en español...",
         "actions": [
-          {"id": "1", "text": "Actionable task 1", "isCompleted": false},
-          {"id": "2", "text": "Actionable task 2", "isCompleted": false},
-          {"id": "3", "text": "Actionable task 3", "isCompleted": false}
+          {"id": "1", "text": "Tarea 1 en español", "isCompleted": false},
+          {"id": "2", "text": "Tarea 2 en español", "isCompleted": false},
+          {"id": "3", "text": "Tarea 3 en español", "isCompleted": false}
         ],
-        "sentiment": "one word: insightful, urgent, reflective, or neutral",
-        "timeToRead": "estimated reading time (e.g. 30s, 1m)"
+        "sentiment": "una palabra del conjunto permitido",
+        "timeToRead": "tiempo estimado (ej. 30s, 1m)"
       }
       
-      Do not include any text outside the JSON block.
+      No incluyas ningún texto fuera del bloque JSON.
     `;
 
-        const result = await model.generateContent([systemPrompt, content]);
-        const response = await result.response;
-        const text = response.text();
+    const result = await model.generateContent([systemPrompt, content]);
+    const response = await result.response;
+    const text = response.text();
 
-        // Clean up the response from any markdown code blocks
-        const cleanJson = text.replace(/```json|```/gi, "").trim();
-        const data = JSON.parse(cleanJson);
+    // Clean up the response from any markdown code blocks
+    const cleanJson = text.replace(/```json|```/gi, "").trim();
+    const data = JSON.parse(cleanJson);
 
-        return NextResponse.json(data);
-    } catch (error) {
-        console.error("AI Generation Error:", error);
-        return NextResponse.json({ error: "Failed to generate capsule" }, { status: 500 });
-    }
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error("AI Generation Error:", error);
+    return NextResponse.json({ error: "Failed to generate capsule" }, { status: 500 });
+  }
 }

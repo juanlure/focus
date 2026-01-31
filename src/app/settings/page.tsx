@@ -23,25 +23,25 @@ export default function SettingsPage() {
                 <Link href="/dashboard" className="p-2 -ml-2 rounded-full hover:bg-muted transition-colors">
                     <ArrowLeft className="w-5 h-5" />
                 </Link>
-                <span className="font-bold text-lg ml-2">Settings</span>
+                <span className="font-bold text-lg ml-2">Configuración</span>
             </header>
 
             <div className="p-6 space-y-8">
 
-                {/* Neural Engine Config */}
+                {/* Configuración del Motor Neural */}
                 <section className="space-y-4">
                     <div className="flex items-center gap-2 mb-2">
                         <Cpu className="w-5 h-5 text-primary" />
-                        <h2 className="text-lg font-bold">Neural Engine</h2>
+                        <h2 className="text-lg font-bold">Motor Neural</h2>
                     </div>
 
                     <div className="bg-card border border-border/50 rounded-2xl p-5 space-y-6">
 
-                        {/* Tone Selector */}
+                        {/* Selector de Tono */}
                         <div className="space-y-3">
-                            <label className="text-sm font-medium text-muted-foreground">AI Personality:</label>
+                            <label className="text-sm font-medium text-muted-foreground">Personalidad de la IA:</label>
                             <div className="grid grid-cols-3 gap-2">
-                                {["Concise", "Socratic", "Executive"].map((t) => (
+                                {["Conciso", "Socrático", "Ejecutivo"].map((t) => (
                                     <button
                                         key={t}
                                         onClick={() => setTone(t)}
@@ -53,12 +53,12 @@ export default function SettingsPage() {
                             </div>
                         </div>
 
-                        {/* Custom Instructions */}
+                        {/* Instrucciones Personalizadas */}
                         <div className="space-y-3">
-                            <label className="text-sm font-medium text-muted-foreground">Custom Instructions:</label>
+                            <label className="text-sm font-medium text-muted-foreground">Instrucciones Personalizadas:</label>
                             <textarea
                                 className="w-full h-32 bg-background/50 border border-border rounded-xl p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none placeholder:text-muted-foreground/30"
-                                placeholder="e.g. Always summarize in bullet points. Use emojis. Avoid jargon..."
+                                placeholder="ej. Resume siempre en puntos. Usa emojis. Evita tecnicismos..."
                                 value={instructions}
                                 onChange={(e) => setInstructions(e.target.value)}
                             />
@@ -68,7 +68,7 @@ export default function SettingsPage() {
                             onClick={handleSave}
                             className="w-full py-3 bg-white/5 border border-white/10 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-white/10 transition-colors"
                         >
-                            {isSaved ? <span className="text-green-500">Changes Saved!</span> : <><Save className="w-4 h-4" /> Save Configuration</>}
+                            {isSaved ? <span className="text-green-500">¡Cambios Guardados!</span> : <><Save className="w-4 h-4" /> Guardar Configuración</>}
                         </button>
 
                     </div>

@@ -115,7 +115,7 @@ export default function VoiceCapturePage() {
                         className="px-8 py-4 rounded-full bg-white text-black font-bold text-lg flex items-center gap-2 hover:scale-105 transition-transform"
                     >
                         <StopCircle className="w-6 h-6 fill-red-500 text-red-500" />
-                        End Session
+                        Finalizar Sesión
                     </button>
                 </div>
 
