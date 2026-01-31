@@ -1,33 +1,46 @@
-"use client";
-
 import { Activity, BarChart3, Clock, Zap } from "lucide-react";
+import { useFocusStore } from "@/store/useFocusStore";
+import { useEffect, useState } from "react";
 
 export function BrainStats() {
+    const { capsules, archivedCapsules } = useFocusStore();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Avoid hydration mismatch
+    if (!mounted) return <div className="grid grid-cols-2 gap-3 mt-4 h-48 animate-pulse bg-muted/20 rounded-2xl" />;
+
+    const totalCapsules = capsules.length + archivedCapsules.length;
+    const actionRate = totalCapsules > 0 ? Math.round((archivedCapsules.length / totalCapsules) * 100) : 0;
+
     return (
         <div className="grid grid-cols-2 gap-3 mt-4">
             <StatCard
                 icon={<Zap className="w-4 h-4 text-yellow-500" />}
-                label="Capsules"
-                value="42"
-                trend="+12%"
+                label="Cápsulas"
+                value={totalCapsules.toString()}
+                trend={`${capsules.length} activas`}
             />
             <StatCard
                 icon={<Activity className="w-4 h-4 text-green-500" />}
-                label="Action Rate"
-                value="85%"
-                trend="+5%"
+                label="Tasa Acción"
+                value={`${actionRate}%`}
+                trend="+0%"
             />
             <StatCard
                 icon={<Clock className="w-4 h-4 text-blue-500" />}
-                label="Focus Time"
-                value="12h"
-                trend="This Week"
+                label="Tiempo Foco"
+                value="--h"
+                trend="Esta semana"
             />
             <StatCard
                 icon={<BarChart3 className="w-4 h-4 text-purple-500" />}
-                label="Brain Score"
-                value="92"
-                trend="Top 10%"
+                label="Nivel Neural"
+                value={Math.min(100, (capsules.length * 5) + 50).toString()}
+                trend="Lvl 1"
             />
         </div>
     );

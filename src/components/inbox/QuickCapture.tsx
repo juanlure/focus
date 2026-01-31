@@ -41,6 +41,7 @@ export function QuickCapture() {
 
             const newId = crypto.randomUUID();
             addCapsule({
+                id: newId,
                 originalContent: input,
                 type: type === "url" ? "url" : "text",
                 summary: aiResult.summary,
@@ -56,6 +57,7 @@ export function QuickCapture() {
             // Fallback for demo or if no API key
             const mockId = crypto.randomUUID();
             addCapsule({
+                id: mockId,
                 originalContent: input,
                 type: type === "url" ? "url" : "text",
                 summary: "Nota capturada (Modo Offline o sin API Key)",

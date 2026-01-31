@@ -6,12 +6,16 @@ interface FocusStore {
     capsules: Capsule[];
     archivedCapsules: Capsule[];
     googleAiKey: string;
-    addCapsule: (capsule: Omit<Capsule, 'id' | 'createdAt'>) => void;
+    isOnboarded: boolean;
+    userName: string;
+    addCapsule: (capsule: Omit<Capsule, 'id' | 'createdAt'> & { id?: string }) => void;
     removeCapsule: (id: string) => void;
     archiveCapsule: (id: string) => void;
     getCapsule: (id: string) => Capsule | undefined;
     updateAction: (capsuleId: string, actionId: string, isCompleted: boolean) => void;
     setGoogleAiKey: (key: string) => void;
+    setIsOnboarded: (val: boolean) => void;
+    setUserName: (name: string) => void;
 }
 
 export const useFocusStore = create<FocusStore>()(
@@ -20,8 +24,10 @@ export const useFocusStore = create<FocusStore>()(
             capsules: [],
             archivedCapsules: [],
             googleAiKey: '',
+            isOnboarded: false,
+            userName: 'Juanlu',
             addCapsule: (newCapsule) => {
-                const id = crypto.randomUUID();
+                const id = newCapsule.id || crypto.randomUUID();
                 const createdAt = new Date().toISOString();
                 set((state) => ({
                     capsules: [{ ...newCapsule, id, createdAt }, ...state.capsules],
@@ -40,7 +46,9 @@ export const useFocusStore = create<FocusStore>()(
                     archivedCapsules: [capsule, ...(state.archivedCapsules || [])]
                 };
             }),
-            getCapsule: (id) => get().capsules.find((c) => c.id === id),
+            getCapsule: (id) => {
+                return get().capsules.find((c) => c.id === id);
+            },
             updateAction: (capsuleId, actionId, isCompleted) => {
                 set((state) => ({
                     capsules: state.capsules.map((c) =>
@@ -56,6 +64,8 @@ export const useFocusStore = create<FocusStore>()(
                 }));
             },
             setGoogleAiKey: (key) => set({ googleAiKey: key }),
+            setIsOnboarded: (val) => set({ isOnboarded: val }),
+            setUserName: (name) => set({ userName: name }),
         }),
         {
             name: 'focus-storage',

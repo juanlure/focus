@@ -4,7 +4,23 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle, Zap, Shield, Globe } from "lucide-react";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useFocusStore } from "@/store/useFocusStore";
+
 export default function LandingPage() {
+  const router = useRouter();
+  const { isOnboarded } = useFocusStore();
+
+  useEffect(() => {
+    if (isOnboarded) {
+      router.replace("/dashboard");
+    }
+  }, [isOnboarded, router]);
+
+  // Prevent flash
+  if (isOnboarded) return null;
+
   return (
     <main className="min-h-screen bg-[#0f0f0f] text-foreground overflow-y-auto pb-24">
 

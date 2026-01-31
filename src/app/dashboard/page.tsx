@@ -1,11 +1,16 @@
+"use client";
+
 import { Header } from "@/components/ui/Header";
 import { BrainStats } from "@/components/dashboard/BrainStats";
 import { TeamInvite } from "@/components/dashboard/TeamInvite";
 import { IOSInstallGuide } from "@/components/ui/IOSInstallGuide";
 import Link from "next/link";
 import { ArrowRight, Plus } from "lucide-react";
+import { useFocusStore } from "@/store/useFocusStore";
 
 export default function Home() {
+  const { userName } = useFocusStore();
+
   return (
     <main className="flex-1 overflow-y-auto pb-24 relative bg-background">
       <Header />
@@ -15,7 +20,7 @@ export default function Home() {
         {/* Welcome Section */}
         <section>
           <h1 className="text-3xl font-bold tracking-tight mb-1">
-            Buenos días, <span className="text-primary">Juanlu</span>.
+            Buenos días, <span className="text-primary">{userName}</span>.
           </h1>
           <p className="text-muted-foreground text-sm">
             Tu cerebro digital está activo. 3 cápsulas pendientes.

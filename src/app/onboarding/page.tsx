@@ -4,16 +4,23 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useFocusStore } from "@/store/useFocusStore";
 
 export default function OnboardingPage() {
     const [step, setStep] = useState(1);
     const router = useRouter();
     const [name, setName] = useState("");
     const [role, setRole] = useState("");
+    const { setUserName, setIsOnboarded } = useFocusStore();
 
     const nextStep = () => {
-        if (step < 3) setStep(step + 1);
-        else router.push("/dashboard");
+        if (step < 3) {
+            if (step === 1 && name) setUserName(name);
+            setStep(step + 1);
+        } else {
+            setIsOnboarded(true);
+            router.push("/dashboard");
+        }
     };
 
     return (
